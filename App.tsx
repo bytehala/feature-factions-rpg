@@ -12,7 +12,7 @@ import {
   ScrollView,
   StatusBar,
   StyleSheet,
-  Text,
+  Text, TouchableOpacity,
   useColorScheme,
   View,
 } from 'react-native';
@@ -24,6 +24,7 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+import PixelProgressBar from './PixelProgressBar.tsx';
 
 type SectionProps = PropsWithChildren<{
   title: string;
@@ -40,7 +41,7 @@ function Section({children, title}: SectionProps): React.JSX.Element {
             color: isDarkMode ? Colors.white : Colors.black,
           },
         ]}>
-        {title}
+        {"Abcdefghij"}
       </Text>
       <Text
         style={[
@@ -83,6 +84,8 @@ function App(): React.JSX.Element {
           <Section title="See Your Changes">
             <ReloadInstructions />
           </Section>
+          <PixelProgressBar progress={50} label="Loading" />
+          <PixelButton title={"Press Me"} onPress={() => console.log("Button Pressed")} />
           <Section title="Debug">
             <DebugInstructions />
           </Section>
@@ -96,6 +99,15 @@ function App(): React.JSX.Element {
   );
 }
 
+
+ function PixelButton({ onPress, title }) {
+  return (
+    <TouchableOpacity onPress={onPress} style={styles.button}>
+      <Text style={styles.sectionTitle}>{title}</Text>
+    </TouchableOpacity>
+  );
+}
+
 const styles = StyleSheet.create({
   sectionContainer: {
     marginTop: 32,
@@ -104,6 +116,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 24,
     fontWeight: '600',
+    fontFamily: 'SFPixelate',
   },
   sectionDescription: {
     marginTop: 8,
@@ -112,6 +125,16 @@ const styles = StyleSheet.create({
   },
   highlight: {
     fontWeight: '700',
+  },
+  button: {
+    backgroundColor: '#f4a261', // Button color
+    borderColor: '#2a9d8f',    // Border color
+    borderWidth: 4,            // Thick border for pixel effect
+    paddingVertical: 8,        // Adjust padding for size
+    paddingHorizontal: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+    margin: 4,
   },
 });
 
