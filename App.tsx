@@ -1,109 +1,80 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
 import React from 'react';
-import type {PropsWithChildren} from 'react';
 import {
+  Image,
   SafeAreaView,
-  ScrollView,
-  StatusBar,
+  StyleProp,
   StyleSheet,
-  Text, TouchableOpacity,
-  useColorScheme,
+  Text,
+  TouchableOpacity,
   View,
+  ViewStyle,
 } from 'react-native';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-import PixelProgressBar from './PixelProgressBar.tsx';
+import {Colors} from 'react-native/Libraries/NewAppScreen';
+import PixelProgressBar from './src/PixelProgressBar.tsx';
+import {GoldProvider, useGold} from './src/GoldContext.tsx';
 
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
-
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
+function AppContent() {
+  const {gold} = useGold();
   return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {"Abcdefghij"}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-}
+    <SafeAreaView style={{backgroundColor: 'white'}}>
+      <View style={{paddingHorizontal: 12, alignItems: 'center'}}>
+        <Text style={[styles.sectionTitle, styles.raceText]}>{'Aetheron'}</Text>
+        <Text style={[styles.bankText]}>{'Sylvan Reliquary: 1,000,000'}</Text>
 
-function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
+        <Image source={require('./assets/A_race.png')} />
 
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
-  return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <PixelProgressBar progress={50} label="Loading" />
-          <PixelButton title={"Press Me"} onPress={() => console.log("Button Pressed")} />
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
+        <View style={{flexDirection: 'row'}}>
+          <PixelProgressBar label="Mining" />
+          <Text style={[styles.sectionTitle, styles.goldText]}>{gold}💰</Text>
         </View>
-      </ScrollView>
+        <PixelButton
+          title={'Donate 💰 to Faction'}
+          onPress={() => console.log('Button Pressed')}
+          style={styles.button}
+        />
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <PixelButton
+            onPress={() => {}}
+            title={'Thrusters'}
+            style={styles.pickedButton}
+          />
+          <View style={{width: 4}} />
+          <PixelButton
+            onPress={() => {}}
+            title={'Armor'}
+            style={styles.choiceButton}
+            disabled={true}
+          />
+        </View>
+      </View>
     </SafeAreaView>
   );
 }
 
-
- function PixelButton({ onPress, title }) {
+function App(): React.JSX.Element {
   return (
-    <TouchableOpacity onPress={onPress} style={styles.button}>
-      <Text style={styles.sectionTitle}>{title}</Text>
+    <GoldProvider>
+      <AppContent />
+    </GoldProvider>
+  );
+}
+
+function PixelButton({
+  onPress,
+  title,
+  style,
+  disabled,
+}: {
+  onPress: () => void;
+  title: string;
+  style: StyleProp<ViewStyle>;
+  disabled?: boolean;
+}) {
+  const buttonStyle = disabled ? styles.disabledButton : style;
+  return (
+    <TouchableOpacity onPress={onPress} style={[style, buttonStyle]} disabled={disabled}>
+      <Text style={styles.buttonText}>{title}</Text>
     </TouchableOpacity>
   );
 }
@@ -113,10 +84,30 @@ const styles = StyleSheet.create({
     marginTop: 32,
     paddingHorizontal: 24,
   },
+  raceText: {
+    padding: 32,
+  },
+  goldText: {
+    paddingTop: 32,
+    paddingLeft: 4,
+  },
   sectionTitle: {
+    fontSize: 36,
+    fontWeight: '600',
+    fontFamily: 'SFPixelate',
+    color: Colors.black,
+  },
+  bankText: {
+    fontSize: 18,
+    fontWeight: '600',
+    fontFamily: 'SFPixelate',
+    color: Colors.black,
+  },
+  buttonText: {
     fontSize: 24,
     fontWeight: '600',
     fontFamily: 'SFPixelate',
+    color: Colors.black,
   },
   sectionDescription: {
     marginTop: 8,
@@ -127,14 +118,41 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   button: {
-    backgroundColor: '#f4a261', // Button color
-    borderColor: '#2a9d8f',    // Border color
-    borderWidth: 4,            // Thick border for pixel effect
-    paddingVertical: 8,        // Adjust padding for size
-    paddingHorizontal: 16,
+    backgroundColor: '#E76F51', // Button color
+    borderColor: '#5C304C', // Border color
+    borderWidth: 4, // Thick border for pixel effect
+    paddingVertical: 8, // Adjust padding for size
     alignItems: 'center',
     justifyContent: 'center',
     margin: 4,
+    width: '100%',
+  },
+  choiceButton: {
+    backgroundColor: '#E76F51', // Button color
+    borderColor: '#5C304C', // Border color
+    borderWidth: 4, // Thick border for pixel effect
+    paddingVertical: 8, // Adjust padding for size
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1,
+  },
+  pickedButton: {
+    backgroundColor: '#4EAE40', // Button color
+    borderColor: '#05282F', // Border color
+    borderWidth: 4, // Thick border for pixel effect
+    paddingVertical: 8, // Adjust padding for size
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1,
+  },
+  disabledButton: {
+    backgroundColor: '#B8B8B8', // Button color
+    borderColor: '#888888', // Border color
+    borderWidth: 4, // Thick border for pixel effect
+    paddingVertical: 8, // Adjust padding for size
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1,
   },
 });
 

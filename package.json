@@ -1,6 +1,8 @@
 {
   "name": "FeatureFlagRPG",
   "version": "0.0.1",
+  "author": "Lemuel Dulfo",
+  "license": "MIT",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
