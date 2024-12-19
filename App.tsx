@@ -103,9 +103,9 @@ function AppContent() {
 function App(): React.JSX.Element {
   const devcycleReady = useIsDevCycleInitialized();
 
-  if (!devcycleReady) {
-    return <></>;
-  }
+  // if (!devcycleReady) {
+  //   return <></>;
+  // }
   return (
     <GoldProvider>
       <AppContent />
@@ -209,4 +209,10 @@ const styles = StyleSheet.create({
   },
 });
 
-export default App;
+
+// secrets.json is a local file, you have to create it and add your devCycleSdkKey
+const secrets = require('./secrets.json');
+
+export default withDevCycleProvider({ sdkKey: secrets.devCycleSdkKey })(
+  App,
+);
