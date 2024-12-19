@@ -209,8 +209,4 @@ const styles = StyleSheet.create({
   },
 });
 
-
-// export default withDevCycleProvider({ sdkKey: '' })(
-//   App,
-// );
 export default App;
