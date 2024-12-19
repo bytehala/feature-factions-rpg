@@ -14,7 +14,7 @@ import 'react-native-get-random-values';
 import DeviceInfo from 'react-native-device-info';
 import '@react-native-async-storage/async-storage';
 import {
-  useIsDevCycleInitialized,
+  useDevCycleClient,
   withDevCycleProvider,
 } from '@devcycle/react-native-client-sdk';
 
@@ -27,9 +27,12 @@ import {devCycleSdkKey} from './secrets.json';
 
 global.DeviceInfo = DeviceInfo;
 
-const races = {
+const FACTION_ACCESSOR = 'B';
+
+const faction = {
   A: {
     name: 'Aetheron',
+    userFaction: 1,
     bankName: 'Central Node',
     levelUpName: 'upgrade',
     imagePath: require('./assets/A_race.png'),
@@ -37,6 +40,7 @@ const races = {
   },
   B: {
     name: 'Bessari',
+    userFaction: 2,
     bankName: 'Guild Vault',
     levelUpName: 'advancement',
     imagePath: require('./assets/B_race.png'),
@@ -44,6 +48,7 @@ const races = {
   },
   C: {
     name: 'Calenwyn',
+    userFaction: 3,
     bankName: 'Sylvan Reliquary',
     levelUpName: 'blessing',
     imagePath: require('./assets/C_race.png'),
@@ -53,18 +58,30 @@ const races = {
 
 function AppContent() {
   const {gold, bankTotalGold, depositGold} = useGold();
-  // // random between 300,000 to 500,000
-  // const randomGold = Math.floor(Math.random() * 200000) + 300000;
-  // // format with commas
+  const optionsRef = React.useRef(null);
   const formattedBankTotalGold = bankTotalGold
     .toString()
     .replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-  // // random between 1 to 99
-  // const randomMined = Math.floor(Math.random() * 99) + 1;
-  // // random 0 or 1
-  // const randomChoice = Math.floor(Math.random() * 2);
-  const accessor = 'C';
-  const {name, bankName, imagePath, levelUpName, options} = races[accessor];
+
+  const {name, bankName, imagePath, levelUpName, userFaction} =
+    faction[FACTION_ACCESSOR];
+  const devCycleClient = useDevCycleClient();
+  devCycleClient.identifyUser(
+    {
+      user_id: 'test-user',
+      customData: {
+        userFaction,
+      },
+    },
+    (err, variables) => {
+      const vars = variables;
+      const key = Object.keys(vars ?? {});
+      const options = vars?.[key[0]].value.options;
+      optionsRef.current = options;
+      console.log(options);
+    },
+  );
+
   return (
     <SafeAreaView style={{backgroundColor: 'white'}}>
       <View style={{paddingHorizontal: 12, alignItems: 'center'}}>
@@ -88,37 +105,35 @@ function AppContent() {
           }}
           style={styles.button}
         />
-        <View>
-          <Text style={[styles.bankText, {padding: 8}]}>
-            Vote for {levelUpName}:
-          </Text>
-        </View>
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          <PixelButton
-            onPress={() => {}}
-            title={options[0]}
-            style={styles.choiceButton}
-            disabled={true}
-          />
-          <View style={{width: 4}} />
-          <PixelButton
-            onPress={() => {}}
-            title={options[1]}
-            style={styles.pickedButton}
-            disabled={false}
-          />
-        </View>
+        {optionsRef.current !== null ? (
+          <>
+            <Text style={[styles.bankText, {padding: 8}]}>
+              Vote for {levelUpName}:
+            </Text>
+
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <PixelButton
+                onPress={() => {}}
+                title={optionsRef.current[0]}
+                style={styles.choiceButton}
+                disabled={false}
+              />
+              <View style={{width: 4}} />
+              <PixelButton
+                onPress={() => {}}
+                title={optionsRef.current[1]}
+                style={styles.choiceButton}
+                disabled={false}
+              />
+            </View>
+          </>
+        ) : null}
       </View>
     </SafeAreaView>
   );
 }
 
 function App(): React.JSX.Element {
-  const devcycleReady = useIsDevCycleInitialized();
-
-  // if (!devcycleReady) {
-  //   return <></>;
-  // }
   return (
     <GoldProvider>
       <AppContent />
