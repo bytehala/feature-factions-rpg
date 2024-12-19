@@ -13,11 +13,17 @@ import {
 import 'react-native-get-random-values';
 import DeviceInfo from 'react-native-device-info';
 import '@react-native-async-storage/async-storage';
-import {DevCycleClient, useIsDevCycleInitialized, withDevCycleProvider} from '@devcycle/react-native-client-sdk';
+import {
+  useIsDevCycleInitialized,
+  withDevCycleProvider,
+} from '@devcycle/react-native-client-sdk';
 
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import PixelProgressBar from './src/PixelProgressBar.tsx';
 import {GoldProvider, useGold} from './src/GoldContext.tsx';
+
+// secrets.json is a local file, you have to create it and add your devCycleSdkKey
+import {devCycleSdkKey} from './secrets.json';
 
 global.DeviceInfo = DeviceInfo;
 
@@ -50,7 +56,9 @@ function AppContent() {
   // // random between 300,000 to 500,000
   // const randomGold = Math.floor(Math.random() * 200000) + 300000;
   // // format with commas
-  const formattedBankTotalGold = bankTotalGold.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  const formattedBankTotalGold = bankTotalGold
+    .toString()
+    .replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   // // random between 1 to 99
   // const randomMined = Math.floor(Math.random() * 99) + 1;
   // // random 0 or 1
@@ -61,7 +69,10 @@ function AppContent() {
     <SafeAreaView style={{backgroundColor: 'white'}}>
       <View style={{paddingHorizontal: 12, alignItems: 'center'}}>
         <Text style={[styles.sectionTitle, styles.raceText]}>{name}</Text>
-        <Text style={[styles.bankText]}>{`${bankName}: ${formattedBankTotalGold}`}</Text>
+        <Text
+          style={[
+            styles.bankText,
+          ]}>{`${bankName}: ${formattedBankTotalGold}`}</Text>
 
         <Image source={imagePath} />
 
@@ -78,7 +89,9 @@ function AppContent() {
           style={styles.button}
         />
         <View>
-          <Text style={[styles.bankText, {padding: 8}]}>Vote for {levelUpName}:</Text>
+          <Text style={[styles.bankText, {padding: 8}]}>
+            Vote for {levelUpName}:
+          </Text>
         </View>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <PixelButton
@@ -126,7 +139,10 @@ function PixelButton({
 }) {
   const buttonStyle = disabled ? styles.disabledButton : style;
   return (
-    <TouchableOpacity onPress={onPress} style={[style, buttonStyle]} disabled={disabled}>
+    <TouchableOpacity
+      onPress={onPress}
+      style={[style, buttonStyle]}
+      disabled={disabled}>
       <Text style={styles.buttonText}>{title}</Text>
     </TouchableOpacity>
   );
@@ -209,10 +225,4 @@ const styles = StyleSheet.create({
   },
 });
 
-
-// secrets.json is a local file, you have to create it and add your devCycleSdkKey
-const secrets = require('./secrets.json');
-
-export default withDevCycleProvider({ sdkKey: secrets.devCycleSdkKey })(
-  App,
-);
+export default withDevCycleProvider({sdkKey: devCycleSdkKey})(App);
