@@ -10,19 +10,60 @@ import {
   ViewStyle,
 } from 'react-native';
 
+import 'react-native-get-random-values';
+import DeviceInfo from 'react-native-device-info';
+import '@react-native-async-storage/async-storage';
+import {DevCycleClient, useIsDevCycleInitialized, withDevCycleProvider} from '@devcycle/react-native-client-sdk';
+
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import PixelProgressBar from './src/PixelProgressBar.tsx';
 import {GoldProvider, useGold} from './src/GoldContext.tsx';
 
+global.DeviceInfo = DeviceInfo;
+
+const races = {
+  A: {
+    name: 'Aetheron',
+    bankName: 'Central Node',
+    levelUpName: 'upgrade',
+    imagePath: require('./assets/A_race.png'),
+    options: ['Thrusters', 'Armor'],
+  },
+  B: {
+    name: 'Bessari',
+    bankName: 'Guild Vault',
+    levelUpName: 'advancement',
+    imagePath: require('./assets/B_race.png'),
+    options: ['Trade', 'Martial Arts'],
+  },
+  C: {
+    name: 'Calenwyn',
+    bankName: 'Sylvan Reliquary',
+    levelUpName: 'blessing',
+    imagePath: require('./assets/C_race.png'),
+    options: ['Heal', 'Cloaking'],
+  },
+};
+
 function AppContent() {
-  const {gold} = useGold();
+  const {gold, bankTotalGold, depositGold} = useGold();
+  // // random between 300,000 to 500,000
+  // const randomGold = Math.floor(Math.random() * 200000) + 300000;
+  // // format with commas
+  const formattedBankTotalGold = bankTotalGold.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  // // random between 1 to 99
+  // const randomMined = Math.floor(Math.random() * 99) + 1;
+  // // random 0 or 1
+  // const randomChoice = Math.floor(Math.random() * 2);
+  const accessor = 'C';
+  const {name, bankName, imagePath, levelUpName, options} = races[accessor];
   return (
     <SafeAreaView style={{backgroundColor: 'white'}}>
       <View style={{paddingHorizontal: 12, alignItems: 'center'}}>
-        <Text style={[styles.sectionTitle, styles.raceText]}>{'Aetheron'}</Text>
-        <Text style={[styles.bankText]}>{'Sylvan Reliquary: 1,000,000'}</Text>
+        <Text style={[styles.sectionTitle, styles.raceText]}>{name}</Text>
+        <Text style={[styles.bankText]}>{`${bankName}: ${formattedBankTotalGold}`}</Text>
 
-        <Image source={require('./assets/A_race.png')} />
+        <Image source={imagePath} />
 
         <View style={{flexDirection: 'row'}}>
           <PixelProgressBar label="Mining" />
@@ -30,21 +71,28 @@ function AppContent() {
         </View>
         <PixelButton
           title={'Donate 💰 to Faction'}
-          onPress={() => console.log('Button Pressed')}
+          onPress={() => {
+            console.log(`Sending ${gold} gold to the faction (backend call)`);
+            depositGold();
+          }}
           style={styles.button}
         />
+        <View>
+          <Text style={[styles.bankText, {padding: 8}]}>Vote for {levelUpName}:</Text>
+        </View>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <PixelButton
             onPress={() => {}}
-            title={'Thrusters'}
-            style={styles.pickedButton}
+            title={options[0]}
+            style={styles.choiceButton}
+            disabled={true}
           />
           <View style={{width: 4}} />
           <PixelButton
             onPress={() => {}}
-            title={'Armor'}
-            style={styles.choiceButton}
-            disabled={true}
+            title={options[1]}
+            style={styles.pickedButton}
+            disabled={false}
           />
         </View>
       </View>
@@ -53,6 +101,11 @@ function AppContent() {
 }
 
 function App(): React.JSX.Element {
+  const devcycleReady = useIsDevCycleInitialized();
+
+  if (!devcycleReady) {
+    return <></>;
+  }
   return (
     <GoldProvider>
       <AppContent />
@@ -156,4 +209,8 @@ const styles = StyleSheet.create({
   },
 });
 
+
+// export default withDevCycleProvider({ sdkKey: '' })(
+//   App,
+// );
 export default App;
