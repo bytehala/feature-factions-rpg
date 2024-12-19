@@ -27,6 +27,12 @@ import {devCycleSdkKey} from './secrets.json';
 
 global.DeviceInfo = DeviceInfo;
 
+// sample option values to be added in DevCycle dashboard:
+// {options: ['Thrusters', 'Armor']}
+// {options: ['Trade', 'Martial Arts']}
+// {options: ['Heal', 'Cloaking']}
+
+// set this to the faction you want to test
 const FACTION_ACCESSOR = 'B';
 
 const faction = {
@@ -36,7 +42,6 @@ const faction = {
     bankName: 'Central Node',
     levelUpName: 'upgrade',
     imagePath: require('./assets/A_race.png'),
-    options: ['Thrusters', 'Armor'],
   },
   B: {
     name: 'Bessari',
@@ -44,7 +49,6 @@ const faction = {
     bankName: 'Guild Vault',
     levelUpName: 'advancement',
     imagePath: require('./assets/B_race.png'),
-    options: ['Trade', 'Martial Arts'],
   },
   C: {
     name: 'Calenwyn',
@@ -52,7 +56,6 @@ const faction = {
     bankName: 'Sylvan Reliquary',
     levelUpName: 'blessing',
     imagePath: require('./assets/C_race.png'),
-    options: ['Heal', 'Cloaking'],
   },
 };
 
