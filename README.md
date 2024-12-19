@@ -37,3 +37,9 @@ Invite friends to join your faction! Every new player boosts your resource minin
 The war is inevitable. Outsmart and outmaneuver rival factions by collaborating effectively and staying active. The future of your race depends on your actions!
 
 Are you ready to shape your destiny? Join Feature Factions RPG today and claim your place in this epic saga! #FeatureFactions #EpicRPG #FeatureFlags 🎮
+
+----
+*This is a submission for the [DevCycle Feature Flag Challenge](https://dev.to/challenges/devcycle): Feature Flag Funhouse*
+
+
+https://dev.to/bytehala/feature-factions-mobile-cooperate-and-battle-with-devcycle-feature-flags-4mnk
