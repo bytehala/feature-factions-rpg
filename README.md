@@ -39,7 +39,37 @@ The war is inevitable. Outsmart and outmaneuver rival factions by collaborating 
 Are you ready to shape your destiny? Join Feature Factions RPG today and claim your place in this epic saga! #FeatureFactions #EpicRPG #FeatureFlags 🎮
 
 ----
+
+## Local Development Setup
+
 *This is a submission for the [DevCycle Feature Flag Challenge](https://dev.to/challenges/devcycle): Feature Flag Funhouse*
 
-
 https://dev.to/bytehala/feature-factions-mobile-cooperate-and-battle-with-devcycle-feature-flags-4mnk
+
+1. Create a DevCycle account, if you don't have one already
+2. Locally create a secrets.json, and add the devCycleSdkKey property. The value will come from your DevCycle dashboard. Try the client sdkKey. [React Native documentation](https://docs.devcycle.com/sdk/client-side-sdks/react-native/react-native-gettingstarted#non-blocking)
+3. Run the app (pre-requisites: React Native setup, Android Studio or XCode)
+    a. iOS: yarn install, npx pod-install, yarn start, `i` runs the app on iOS
+    b. Android: yarn install, `a`
+
+### Changing Your Faction
+
+Currently, this is hardcoded via `FACTION_ACCESSOR` in `App.tsx`.
+Valid values are A, B, and C.
+
+### DevCycle Dashboard "level up" options setup
+
+1. create a feature
+2. create variations
+3. set up targetting
+
+![variations](https://github.com/user-attachments/assets/8136b818-01f4-4f06-a0e1-8e7a6624c9f9)
+
+## Roadmap
+
+- sqlite or local db to store values such as faction's total gold in memory, so it doesn't reset to 0 each restart
+- race selection screen, so we don't hardcode
+- animations to delight the user, e.g. when donating mined gold, staff particles, etc
+- sound effects
+- screen showing previous faction upgrades
+- shell script to simulate new level up options from the backend
