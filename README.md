@@ -1,5 +1,7 @@
 # Feature Factions RPG 🎲
 
+![Feature Factions RPG](assets/feature_factions.png)
+
 Welcome to Feature Factions, where the fate of three ancient races rests in your hands! Will you join the precise and mechanical Aetheron, the resilient and cunning Bessari, or the mystical and graceful Calenwyn? Mine resources to fuel your faction’s treasury—the Central Node 🤖, Guild Vault 🧑‍🏭, or Sylvan Reliquary 🧝‍♀️. Work with your allies to unlock powerful upgrades and strategize for the ultimate showdown. The war is coming—#StopPretending 🧙and  #StartShipping 🚀
 
 ## How to Play
