@@ -47,7 +47,7 @@ Are you ready to shape your destiny? Join Feature Factions RPG today and claim y
 https://dev.to/bytehala/feature-factions-mobile-cooperate-and-battle-with-devcycle-feature-flags-4mnk
 
 1. Create a DevCycle account, if you don't have one already
-2. Locally create a secrets.json, and add the devCycleSdkKey property. The value will come from your DevCycle dashboard. Try the client sdkKey. [React Native documentation](https://docs.devcycle.com/sdk/client-side-sdks/react-native/react-native-gettingstarted#non-blocking)
+2. Locally create a secrets.json, and add the `sdkKey` property. The value will come from your DevCycle dashboard. I used the `client` sdkKey. [React Native documentation](https://docs.devcycle.com/sdk/client-side-sdks/react-native/react-native-gettingstarted#non-blocking)
 3. Run the app (pre-requisites: React Native setup, Android Studio or XCode)
     a. iOS: yarn install, npx pod-install, yarn start, `i` runs the app on iOS
     b. Android: yarn install, `a`

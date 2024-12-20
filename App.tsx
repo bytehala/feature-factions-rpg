@@ -1,14 +1,5 @@
 import React from 'react';
-import {
-  Image,
-  SafeAreaView,
-  StyleProp,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  ViewStyle,
-} from 'react-native';
+import {Image, SafeAreaView, StyleSheet, Text, View} from 'react-native';
 
 import 'react-native-get-random-values';
 import DeviceInfo from 'react-native-device-info';
@@ -23,7 +14,9 @@ import PixelProgressBar from './src/PixelProgressBar.tsx';
 import {GoldProvider, useGold} from './src/GoldContext.tsx';
 
 // secrets.json is a local file, you have to create it and add your devCycleSdkKey
-import {devCycleSdkKey} from './secrets.json';
+import {sdkKey} from './secrets.json';
+import {ActiveUpgradeOptions} from './src/ActiveUpgradeOptions.tsx';
+import {PixelButton} from './src/PixelButton.tsx';
 
 global.DeviceInfo = DeviceInfo;
 
@@ -33,7 +26,7 @@ global.DeviceInfo = DeviceInfo;
 // {options: ['Heal', 'Cloaking']}
 
 // set this to the faction you want to test
-const FACTION_ACCESSOR = 'B';
+const FACTION_ACCESSOR = 'C';
 
 const faction = {
   A: {
@@ -61,7 +54,7 @@ const faction = {
 
 function AppContent() {
   const {gold, bankTotalGold, depositGold} = useGold();
-  const optionsRef = React.useRef(null);
+  const optionsRef = React.useRef<string | undefined>(undefined);
   const formattedBankTotalGold = bankTotalGold
     .toString()
     .replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -76,12 +69,10 @@ function AppContent() {
         userFaction,
       },
     },
-    (err, variables) => {
-      const vars = variables;
-      const key = Object.keys(vars ?? {});
-      const options = vars?.[key[0]].value.options;
-      optionsRef.current = options;
-      console.log(options);
+    (_err, variables) => {
+      // grab the key of the first variable
+      const key = Object.keys(variables ?? {}); // Either the DevCycle variable name or undefined
+      optionsRef.current = key[0];
     },
   );
 
@@ -108,28 +99,8 @@ function AppContent() {
           }}
           style={styles.button}
         />
-        {optionsRef.current !== null ? (
-          <>
-            <Text style={[styles.bankText, {padding: 8}]}>
-              Vote for {levelUpName}:
-            </Text>
-
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <PixelButton
-                onPress={() => {}}
-                title={optionsRef.current[0]}
-                style={styles.choiceButton}
-                disabled={false}
-              />
-              <View style={{width: 4}} />
-              <PixelButton
-                onPress={() => {}}
-                title={optionsRef.current[1]}
-                style={styles.choiceButton}
-                disabled={false}
-              />
-            </View>
-          </>
+        {optionsRef.current ? (
+          <ActiveUpgradeOptions variableKey={optionsRef.current} levelUpName={levelUpName} />
         ) : null}
       </View>
     </SafeAreaView>
@@ -141,28 +112,6 @@ function App(): React.JSX.Element {
     <GoldProvider>
       <AppContent />
     </GoldProvider>
-  );
-}
-
-function PixelButton({
-  onPress,
-  title,
-  style,
-  disabled,
-}: {
-  onPress: () => void;
-  title: string;
-  style: StyleProp<ViewStyle>;
-  disabled?: boolean;
-}) {
-  const buttonStyle = disabled ? styles.disabledButton : style;
-  return (
-    <TouchableOpacity
-      onPress={onPress}
-      style={[style, buttonStyle]}
-      disabled={disabled}>
-      <Text style={styles.buttonText}>{title}</Text>
-    </TouchableOpacity>
   );
 }
 
@@ -243,4 +192,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default withDevCycleProvider({sdkKey: devCycleSdkKey})(App);
+export default withDevCycleProvider({sdkKey})(App);
